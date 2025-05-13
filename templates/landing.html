@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Пожарная безопасность</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.245.3/dist/umd/lucide.js"></script>
+  <link href="./dist/output.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    .dark-mode {
+      --bg-color: #1a202c;
+      --text-color: white;
+    }
+    body.dark-mode {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <nav class="fixed w-full bg-purple-200 backdrop-blur-sm z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shield-check" class="text-red-500" size="24"></i>
+          <span class="font-bold text-xl text-purple-900">Ваша пожарная безопасность</span>
+        </div>
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#" class="text-purple-900 hover:text-purple-700 transition-colors">Домашняя страница</a>
+          <a href="/about" class="text-purple-900 hover:text-purple-700 transition-colors">О нас</a>
+          <a href="/login" class="text-purple-900 hover:text-purple-700 transition-colors">Войти</a>
+          <a href="/signup" class="text-purple-900 hover:text-purple-700 transition-colors">Регистрация</a>
+          <button id="darkModeToggle" class="p-2 rounded-full hover:bg-gray-200/20">
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="relative min-h-screen pt-16">
+    <img
+      src="https://caoinform.moscow/wp-content/uploads/sites/38/2022/06/4-1-2.jpg"
+      alt="Laboratory"
+      class="absolute inset-0 w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-black/80 to-black/50"></div>
+    <div class="relative pt-32 px-4 max-w-7xl mx-auto text-center text-white">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6 text-purple-500">
+        Пожарная безопасность </br>вашего объекта
+        <br />
+        в надежных руках
+      </h1>
+      <p class="text-xl md:text-2xl mb-8 opacity-90">
+        Благодаря технологиям машинного обучения сделаем мониторинг </br> за состоянием датчиков лечге и быстрее
+      </p>
+      <a href="/signup" class="px-8 py-4 bg-purple-500 hover:bg-purple-600 rounded-lg text-lg font-semibold transition-colors">
+        Попробовать сейчас!
+      </a>
+    </div>
+  </div>
+  <section id="how-it-works" class="bg-gray-80 py-4 pt-16 pb-8">
+    <div class="max-w-7xl mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-4">Как это работает?</h3>
+      <div class="flex justify-around space-x-4">
+        <div class="flex flex-col items-center text-purple-800">
+          <i data-lucide="key-square" class="w-16 h-4"></i>
+          <h3 class="text-xl font-semibold">Этап 1: Зарегестрируйтесь</h3>
+          <p class="text-gray-700">Введите логин и пароль для вашего аккаунта</p>
+        </div>
+        <div class="flex flex-col items-center text-purple-800">
+          <i data-lucide="cpu" class="w-16 h-4"></i>
+          <h3 class="text-xl font-semibold">Этап 2: Выберите один из режимов</br>(ручной или авто)</h3>
+          <p class="text-gray-700">Сделайте выбор между зеленой и красной кнопками.</p>
+        </div>
+        <div class="flex flex-col items-center text-purple-800">
+          <i data-lucide="monitor-check" class="w-16 h-4"></i>
+          <h3 class="text-xl font-semibold">Этап 3: Наблюдайте за мониторингом </br>датчиков на вашем объекте</h3>
+          <p class="text-gray-700">В таблице представлены параметры воздуха </br>на объекте.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ <footer class="bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto px-4 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div class="space-y-4">
+          <h3 class="font-bold text-lg">Предупреждение</h3>
+          <p class="text-sm opacity-70">
+            Это учебный проект, лишь имитирующий действия датчиков противопожарной защиты, не является реальной системой.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4">Ссылки</h3>
+          <ul class="space-y-2">
+            <li><a href="#home" class="opacity-70 hover:opacity-100">Домашняя страница</a></li>
+            <li><a href="#about" class="opacity-70 hover:opacity-100">О нас</a></li>
+            <li><a href="#dataset" class="opacity-70 hover:opacity-100">Датасет</a></li>
+            <li><a href="#methodology" class="opacity-70 hover:opacity-100">Методология</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4">Команда</h3>
+          <ul class="space-y-2">
+            <li><a class="opacity-70 hover:opacity-100">Логинов Андрей</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="font-bold text-lg mb-4">Связь</h3>
+          <div class="flex gap-4">
+            <a href="https://t.me/andrwlog" class="opacity-70 hover:opacity-100"><i data-lucide="message-circle-more" class="w-6 h-6"></i></a>
+            <a href="https://github.com/andrwZxc" class="opacity-70 hover:opacity-100"><i data-lucide="github" class="w-6 h-6"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    lucide.createIcons();
+  
+    function scrollToSection(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  </script>
+</body>
+</html>

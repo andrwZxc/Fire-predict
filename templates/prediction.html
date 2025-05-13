@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мониторинг</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.245.3/dist/umd/lucide.js"></script>
+  <link href="./dist/output.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    .dark-mode {
+      --bg-color: #1a202c;
+      --text-color: white;
+    }
+    body.dark-mode {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+  <nav class="fixed w-full bg-purple-200 backdrop-blur-sm z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shield-check" class="text-red-500" size="24"></i>
+          <span class="font-bold text-xl text-purple-900">Ваша пожарная безопасность</span>
+        </div>
+        {% if 'user_id' in session %}
+        <div class="flex items-center gap-4">
+          <div class="text-sm text-gray-700">
+            <span>{{ username }}</span> 
+          </div>
+          <a href="{{ url_for('logout') }}" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg">
+            Выйти
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+  <section id="prediction-section" class="relative h-screen flex items-center justify-center bg-gray-900">
+    <div class="fixed inset-0 -z-10">
+      <img
+        src="https://images.unsplash.com/photo-1579165466741-7f35e4755660"
+        alt="Laboratory"
+        class="w-full h-full object-cover opacity-30"
+      />
+    </div>
+
+    <!-- ФОРМА С ДАННЫМИ -->
+    <div class="relative p-10 bg-white rounded-lg shadow-lg max-w-lg w-full text-center">
+      <h2 class="text-3xl font-bold my-4">Данные с ваших датчиков</h2>
+      <p class="text-gray-700 mb-6">
+        В эту форму будут передаваться данные с датчиков противопожарной защиты
+      </p>
+      <div class="flex flex-col items-center justify-center p-6 rounded-md shadow-md border border-dashed border-gray-400 bg-gray-100">
+        <div class="flex justify-center mb-4 space-x-4">
+
+          <button id="startAuto" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md">
+              Старт авто
+          </button>
+          <button id="stopAuto" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md">
+              Стоп авто
+          </button>
+          <button id="checkNow" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md">
+              Проверить сейчас
+          </button>
+      </div>
+
+        <form id="sensorForm" class="w-full">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+
+            <div class="form-group">
+              <label for="utc" class="block text-gray-700 mb-2">Дата и время</label>
+              <div id="liveClock" class="text-xl w-70 font-mono bg-gray-100 p-3 rounded-md">
+                <!-- ЧАСЫ --> 
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="Sensor_ID" class="block text-gray-700 mb-2">Номер датчика</label>
+              <input type="number" step="0.1" id="Sensor_ID" name="Sensor_ID" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="CO2_Room" class="block text-gray-700 mb-2">Углекислый газ</label>
+              <input type="number" step="0.1" id="CO2_Room" name="CO2_Room" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="H2_Room" class="block text-gray-700 mb-2">Водород</label>
+              <input type="number" id="H2_Room" name="H2_Room" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="eco2" class="block text-gray-700 mb-2">PM_05</label>
+              <input type="number" id="eco2" name="eco2" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="raw_h2" class="block text-gray-700 mb-2">PM_100</label>
+              <input type="number" step="0.0001" id="raw_h2" name="raw_h2" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="raw_ethanol" class="block text-gray-700 mb-2">PM_10</label>
+              <input type="number" step="0.0001" id="raw_ethanol" name="raw_ethanol" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="pressure" class="block text-gray-700 mb-2">PM_25</label>
+              <input type="number" step="0.01" id="pressure" name="pressure" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+            <div class="form-group">
+              <label for="PM1.0" class="block text-gray-700 mb-2">PM_40</label>
+              <input type="number" step="0.01" id="PM1.0" name="PM1.0" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+            <div class="form-group">
+              <label for="PM2.0" class="block text-gray-700 mb-2">Средний размер PM</label>
+              <input type="number" step="0.01" id="PM2.0" name="PM2.0" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+            <div class="form-group">
+              <label for="NC0.5" class="block text-gray-700 mb-2">PM Суммарно</label>
+              <input type="number" step="0.01" id="NC0.5" name="NC0.5" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+            <div class="form-group">
+              <label for="NC1.0" class="block text-gray-700 mb-2">Летучие органические соединения</label>
+              <input type="number" step="0.01" id="NC1.0" name="NC1.0" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+            <div class="form-group">
+              <label for="NC2.5" class="block text-gray-700 mb-2">Температура</label>
+              <input type="number" step="0.01" id="NC2.5" name="NC2.5" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+            <div class="form-group">
+              <label for="CNT" class="block text-gray-700 mb-2">Влажность</label>
+              <input type="number" step="0.01" id="CNT" name="CNT" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+            <div class="form-group">
+              <label for="CNT" class="block text-gray-700 mb-2">Оксид углерода</label>
+              <input type="number" step="0.01" id="CNT" name="CNT" class="w-full px-3 py-2 border rounded-md" required>
+            </div>
+
+          </div>
+
+        </form>
+        
+        <div id="predictionResult" class="mt-4 p-4 bg-gray-100 rounded-md hidden"></div>
+        <div id="result" class="mt-6 p-4 rounded-md text-center font-bold hidden"></div>
+        <div id="loading" class="mt-6 text-center hidden">
+            <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+            <p class="mt-2 text-gray-600">Анализируем данные...</p>
+        </div>
+        
+        <div class="mt-6 text-sm text-gray-500">
+            <p>Последняя проверка: <span id="lastCheck">-</span></p>
+            <p>Статус: <span id="status">Не активно</span></p>
+        </div>
+
+        <script>
+
+
+          function updateClock() {
+          const now = new Date();
+          const clockElement = document.getElementById('liveClock');
+          
+          clockElement.textContent = now.toLocaleString('ru-RU', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
+        }
+        
+        // Обновляем сразу и каждую секунду
+        updateClock();
+        setInterval(updateClock, 1000);
+
+
+        // функция обработки  
+
+         // Таймер для автоматической генерации
+        let autoUpdateInterval = null;
+        let isAutoMode = false;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+    // Получаем элементы интерфейса
+    const startAutoBtn = document.getElementById('startAuto');
+    const stopAutoBtn = document.getElementById('stopAuto');
+    const checkNowBtn = document.getElementById('checkNow');
+    const statusLabel = document.getElementById('status');
+    const lastCheckLabel = document.getElementById('lastCheck');
+
+    // Генерация начальных значений
+    generateSensorValues();
+    stopAutoBtn.disabled = true;
+
+    // Обновление часов
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Назначаем обработчики событий
+    startAutoBtn.addEventListener('click', startAutoMode);
+    stopAutoBtn.addEventListener('click', stopAutoMode);
+    checkNowBtn.addEventListener('click', manualCheck);
+});
+
+        
+        // Функция генерации случайных значений
+        function generateSensorValues() {
+    const sensors = [
+        { id: 'temperature', min: -15, max: 60, step: 0.1 },
+        { id: 'humidity', min: 10, max: 75, step: 0.1 },
+        { id: 'tvoc', min: 0, max: 60000, step: 2 },
+        { id: 'eco2', min: 400, max: 60000, step: 2 },
+        { id: 'raw_h2', min: 10668, max: 13803, step: 1 },
+        { id: 'raw_ethanol', min: 15317, max: 21410, step: 1 },
+        { id: 'pressure', min: 930, max: 939, step: 0.01 },
+        { id: 'PM1.0', min: 10, max: 14333, step: 10 },
+        { id: 'PM2.0', min: 12, max: 45432, step: 10 }, // Исправлено с PM2.5 на PM2.0
+        { id: 'NC0.5', min: 8, max: 61482, step: 10 },
+        { id: 'NC1.0', min: 7, max: 51914, step: 10 },
+        { id: 'NC2.5', min: 9, max: 30026, step: 10 },
+        { id: 'CNT', min: 10, max: 24993, step: 10 }
+    ];
+    
+    sensors.forEach(sensor => {
+        const input = document.getElementById(sensor.id);
+        if (input) {
+            // Генерация нового значения
+            const newValue = (Math.random() * (sensor.max - sensor.min) + sensor.min).toFixed(
+                sensor.step.toString().includes('.') ? sensor.step.toString().split('.')[1].length : 0
+            );
+            input.value = newValue;
+        }
+    });
+    
+    return getCurrentValues();
+}
+        
+        // Получение текущих значений
+        function getCurrentValues() {
+            return {
+                temperature: parseFloat(document.getElementById('temperature').value),
+                humidity: parseFloat(document.getElementById('humidity').value),
+                tvoc: parseInt(document.getElementById('tvoc').value),
+                eco2: parseInt(document.getElementById('eco2').value),
+                raw_h2: parseFloat(document.getElementById('raw_h2').value),
+                raw_ethanol: parseFloat(document.getElementById('raw_ethanol').value),
+                pressure: parseFloat(document.getElementById('pressure').value),
+                'PM1.0': parseFloat(document.getElementById('PM1.0').value),
+                'PM2.0': parseFloat(document.getElementById('PM2.0').value),
+                'NC0.5': parseFloat(document.getElementById('NC0.5').value),
+                'NC1.0': parseFloat(document.getElementById('NC1.0').value),
+                'NC2.5': parseFloat(document.getElementById('NC2.5').value),
+                'CNT': parseFloat(document.getElementById('CNT').value)
+            };
+        }
+        
+        // Функция отправки данных на сервер
+        async function sendToModel(data) {
+            // Показываем индикатор загрузки
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('result').classList.add('hidden');
+            
+            try {
+                // Отправляем данные на сервер Flask
+                const response = await fetch('/predict-fire', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data) // JSON здесь нужен для передачи данных между сервером и клиентом в текстовом формате
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Ошибка сервера');
+                }
+                
+                const result = await response.json();
+                const resultDiv = document.getElementById('result');
+                
+                // Отображаем результат
+                if (result.prediction === 1) {
+                    resultDiv.textContent = '⚠️ ВНИМАНИЕ: Обнаружено возгорание! ⚠️';
+                    resultDiv.className = 'mt-6 p-4 rounded-md text-center font-bold bg-red-100 text-red-800';
+                } else {
+                    resultDiv.textContent = '✅ Нет признаков возгорания. Всё в норме.';
+                    resultDiv.className = 'mt-6 p-4 rounded-md text-center font-bold bg-green-100 text-green-800';
+                }
+                
+                resultDiv.classList.remove('hidden');
+                
+                // Обновляем время последней проверки
+                lastCheckLabel.textContent = new Date().toLocaleTimeString();
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                const resultDiv = document.getElementById('result');
+                resultDiv.textContent = '❌ Ошибка при получении данных';
+                resultDiv.className = 'mt-6 p-4 rounded-md text-center font-bold bg-yellow-100 text-yellow-800';
+                resultDiv.classList.remove('hidden');
+            } finally {
+                document.getElementById('loading').classList.add('hidden');
+            }
+        }
+        
+        // Запуск автоматического режима
+        function startAutoMode() {
+            if (isAutoMode) return;
+            
+            isAutoMode = true;
+            document.getElementById('status').textContent = 'Авто режим (активно)';
+            document.getElementById('startAuto').disabled = true;
+            document.getElementById('stopAuto').disabled = false;
+            
+            // Генерируем и отправляем данные сразу
+            const data = generateSensorValues();
+            sendToModel(data);
+            
+            // Устанавливаем интервал на 1 секунду
+            autoUpdateInterval = setInterval(() => {
+                const data = generateSensorValues();
+                sendToModel(data);
+            }, 1000);
+        }
+        
+        // Остановка автоматического режима
+        function stopAutoMode() {
+            if (!isAutoMode) return;
+            
+            isAutoMode = false;
+            statusLabel.textContent = 'Не активно';
+            startAutoBtn.disabled = false;
+            stopAutoBtn.disabled = true;
+            
+            clearInterval(autoUpdateInterval);
+            autoUpdateInterval = null;
+        }
+        
+        // Проверка вручную
+        function manualCheck() {
+            const data = getCurrentValues();
+            sendToModel(data);
+        }
+        
+        // Назначаем обработчики событий
+        startAutoBtn.addEventListener('click', startAutoMode);
+        stopAutoBtn.addEventListener('click', stopAutoMode);
+        checkNowBtn.addEventListener('click', manualCheck);
+        
+        // Инициализация - генерируем начальные значения
+        document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация элементов
+    const startAutoBtn = document.getElementById('startAuto');
+    const stopAutoBtn = document.getElementById('stopAuto');
+    const checkNowBtn = document.getElementById('checkNow');
+    const statusLabel = document.getElementById('status');
+    const lastCheckLabel = document.getElementById('lastCheck');
+
+    // Генерация начальных значений
+    generateSensorValues();
+    stopAutoBtn.disabled = true;
+
+    // Обновление часов
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Назначение обработчиков
+    startAutoBtn.addEventListener('click', startAutoMode);
+    stopAutoBtn.addEventListener('click', stopAutoMode);
+    checkNowBtn.addEventListener('click', manualCheck);
+});
+        setTimeout(function() {
+    generateSensorValues();
+    stopAutoBtn.disabled = true;
+    updateClock();
+    setInterval(updateClock, 1000);
+}, 100); // Небольшая задержка для полной загрузки DOM
+    </script>
+
+  </section>
+
+  <script>
+      lucide.createIcons();
+  </script>
+</body>
+</html>
