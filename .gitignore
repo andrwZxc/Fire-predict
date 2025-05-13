@@ -1,2 +1,4 @@
 "Python-3.11.9"
 "venv3.11"venv*/
+*.so
+*.so.
