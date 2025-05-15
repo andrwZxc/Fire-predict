@@ -4,17 +4,13 @@ from PIL import Image
 import numpy as np
 import os
 import pickle 
-import tensorflow
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
-from tensorflow.keras.models import load_model
 from sklearn.preprocessing import StandardScaler
+from flask import send_from_directory
 
-#filename = 'model.pkl'
-#with open(filename, 'rb') as file: # конструкция для безопасности, чтобы файл закрылся после выполнения блока кода
-#    model = pickle.load(file) # read binary
 
 
 app = Flask(__name__)
@@ -23,15 +19,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-# Загрузим модель
-model = load_model('models/model.h5')
-with open('models/preprocessors.pkl','rb') as f:
-    preprocessors = pickle.load(f)
-    scaler = preprocessors['scaler']
-    label_encoders = preprocessors['label_encoders']
+# # Загрузка модели
+# model_path = 'models/model.pkl'
+# if os.path.exists(model_path):
+#     with open(model_path, 'rb') as f:
+#         model = pickle.load(f)
+# else:
+#     raise FileNotFoundError(f"Model file not found at {model_path}")
 
-
-
+with open('models/model15.05.pkl', 'rb') as f:
+    artifacts = pickle.load(f)
+    print("Загруженные фичи: ", artifacts['features'])
+    model = artifacts['model']
+    #le = artifacts['label_encoder']
+    features = artifacts['features']
 db = SQLAlchemy(app)
 
 class User(db.Model):
@@ -102,47 +103,64 @@ def logout():
     flash('Logged out successfully')
     return redirect(url_for('landing'))
 
+@app.route('/get_csv_data')
+def get_csv_data():
+    return send_from_directory('static/datasets', 'TEST15.05.csv')
+    
 
 @app.route('/predict_fire', methods=['GET','POST'])
 def predict_fire():
     if request.method == 'GET':
         return render_template('prediction.html')  # если метод get то просто загружаем страницу
-    elif request.method == 'POST':return redirect(url_for('login.html'))
+    
     try:
+        print("Получен запрос с данными:", request.json)
         # Получаем данные из запроса
-        data = request.json # преобразование данных из JSON в py словарь
+        data = request.get_json() # преобразование данных из JSON в py словарь
         
+        
+
+    
         # Преобразуем в DataFrame (в том же порядке, как при обучении)
         input_data = pd.DataFrame([[
-            data['temperature'],
-            data['humidity'],
-            data['tvoc'],
-            data['eco2'],
-            data['raw_h2'],
-            data['raw_ethanol'],
-            data['pressure']
-        ]], columns=['Temperature[C]', 'Humidity[%]', 'TVOC[ppb]', 
-                    'eCO2[ppm]', 'Raw H2', 'Raw Ethanol', 'Pressure[hPa]'])
+            data['CO2_Room'],
+            data['H2_Room'],
+            data['PM05_Room'],
+            data['PM100_Room'],
+            data['PM10_Room'],
+            data['PM25_Room'],
+            data['PM40_Room'],
+            data['PM_Room_Typical_Size'],
+            data['PM_Total_Room'],
+            data['VOC_Room_RAW'],
+            data['Temperature_Room'],
+            data['Humidity_Room'],
+            data['CO_Room'],
+            
+        ]], columns=['CO2_Room','H2_Room', 'PM05_Room' ,'PM100_Room', 'PM10_Room', 'PM25_Room' , 'PM40_Room', 'PM_Room_Typical_Size' ,'PM_Total_Room', 'VOC_Room_RAW' ,'Temperature_Room', 'Humidity_Room','CO_Room' ])
         
-        # Масштабируем данные (если нужно)
-        with open('scaler.pkl', 'rb') as f:
-            scaler = pickle.load(f)
-        scaled_data = scaler.transform(input_data)
-        
+        print("Данные для предсказания: ", input_data)
+    
+        #input_data['Sensor_ID'] = le.transform(input_data['Sensor_ID']) # перекодируем метки
+
+        input_data = input_data[features]
+
+
         # Делаем предсказание
-        prediction = model.predict(scaled_data)[0]
-        probability = model.predict_proba(scaled_data)[0][1]  # Вероятность класса 1 (пожар)
+        prediction = model.predict(input_data)[0]
+        probability = model.predict_proba(input_data)[0][1]  # Вероятность класса 1 (пожар)
         
+        print("Результат предсказания: ", prediction, " === ", probability)
+
         return jsonify({
             'prediction': int(prediction),
+            'probability': float(probability),
             'status': 'success'
         })
         
     except Exception as e:
-        return jsonify({
-            'error': str(e),
-            'status': 'error'
-        }), 400
+        print("Ошибка: ", str(e))
+        return jsonify({'error': str(e), 'status':'error'})
     
     # features = np.array(data['features']).reshape(1, -1)
         
@@ -167,4 +185,4 @@ def predict_fire():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
