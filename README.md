@@ -18,9 +18,8 @@
 - sklearn, pickle
 - Google Colab
 
-## 📈 Модели точность
-![image](https://github.com/user-attachments/assets/8f0695a7-2e72-410a-83c2-32b691ab2bd6)
 
+## 📚 Datasets
+TRAIN https://data.mendeley.com/datasets/yghykzm4km/1
 
-## 📚 Dataset
-https://www.kaggle.com/datasets/deepcontractor/smoke-detection-dataset/code
+TEST https://data.mendeley.com/datasets/npk2zcm85h/1
