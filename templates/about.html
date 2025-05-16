@@ -16,10 +16,10 @@
     <aside class="w-64 h-screen bg-gray-900 text-white fixed left-0 top-0 p-6">
       <div class="flex items-center gap-3 mb-12">
         <i data-lucide="shield-check" class="text-red-500" style="width: 32px; height: 32px;"></i>
-        <span class="font-bold text-xl">FMS (Fire Monitoring System)</span>
+        <span class="font-bold text-xl">FMS </span>
       </div>
       <nav class="space-y-4">
-        <button onclick="window.location.href = '#' " class="flex items-center gap-3 w-full p-3 rounded-lg transition-colors hover:bg-gray-800">
+        <button onclick="window.location.href = '/'" class="flex items-center gap-3 w-full p-3 rounded-lg transition-colors hover:bg-gray-800">
           <i data-lucide="home" class="w-5 h-5"></i>
           <span class="w-4">Домашняя страница</span>
         </button>
@@ -178,45 +178,43 @@
           </p>
       
           <div class="steps">
-            <div class="step"><span>&#8250;</span> Источник датасета: <span>Kaggle</span></div>
-            <div class="step"><span>&#8250;</span> Модель: <span>K-neighbors</span></div>
+            <div class="step"><span>&#8250;</span> Источник датасета: <span>Mendeley Data</span></div>
+            <div class="step"><span>&#8250;</span> Модель: <span>RandomForest</span></div>
             <div class="step"><span>&#8250;</span> Frontend: <span>HTML, CSS, JavaScript</span></div>
-            <div class="step"><span>&#8250;</span> Backend: <span>Flask with Python</span></div>
+            <div class="step"><span>&#8250;</span> Backend: <span>Flask </span></div>
             <div class="step"><span>&#8250;</span> База данных: <span>SQLite & SQLAlchemy </span></div>
           </div>
       
           <div class="stats">
             <div class="stat">
               <div class="stat-icon">&#128200;</div>
-              <div class="stat-value">99%</div>
+              <div class="stat-value">90%</div>
               <div class="stat-label">Точность предсказаний</div>
             </div>
             <div class="stat">
               <div class="stat-icon">&#128202;</div>
-              <div class="stat-value">65536 </div>
-              <div class="stat-label">записей</div>
+              <div class="stat-value">TRAIN </div>
+              <div class="stat-label">270 000 записей</div>
             </div>
             <div class="stat">
-              <div class="stat-icon">&#128187;</div>
-              <div class="stat-value">8</div>
-              <div class="stat-label">Моделей</div>
+              <div class="stat-icon">&#128269;</div>
+              <div class="stat-value">TEST</div>
+              <div class="stat-label">90 000 записей</div>
             </div>
             <div class="stat">
               <div class="stat-icon">&#128736;</div>
-              <div class="stat-value">Метод K-Neighbors</div>
+              <div class="stat-value">RandomForest</div>
               <div class="stat-label">Наиболее точный</div>
+            </div>
+            <div class="stat">
+              <div class="stat-icon">&#128640;</div>
+              <div class="stat-value">Метрики</div>
+              <div class="stat-label">Roc Auc и F1</div>
             </div>
           </div>
 
           <h5 class="subtitle"></h5>
-          <p class="description"><!--
-            - <b>Healthcare & Emergency Services:</b> Quick blood group detection for faster transfusions and critical care.<br>
-            - <b>Blood Donation Camps:</b> Non-invasive blood group classification to streamline donor processing.<br>
-            - <b>Personal Health:</b> Easy blood group identification for health records and preparedness.<br>
-            - <b>Mobile Apps:</b> Blood group prediction through smartphone applications for convenience.<br>
-            - <b>Forensics:</b> Biometric-based blood group identification for criminal investigations.<br>
-            - <b>Transplants:</b> Faster blood and organ matching for transplants and donations.
-          </p>-->
+          
         </div>
       </section>
 
@@ -225,10 +223,10 @@
     <h2 class="text-3xl font-bold mb-6">Датасет</h2>
     <div class="grid grid-cols-1 gap-6">
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-        <img src="{{ url_for('static', filename='dataset_preview.png') }}" alt="Fingerprint Image" class="w-full h-auto">
+        <img src="{{ url_for('static', filename='dataset.png') }}" alt="Fingerprint Image" class="w-full h-auto">
         <div class="p-4">
           <h3 class="text-lg font-semibold">Датасет на основе которого обучалась модель</h3>
-          <p class="mt-2 text-sm text-gray-600">This section displays a sample fingerprint used to train the model.</p>
+          <p class="mt-2 text-sm text-gray-600">246 711 записей.</p>
         </div>
       </div>
     </div>
@@ -241,41 +239,49 @@
     <div class="space-y-6">
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div class="p-4">
-          <h3 class="text-lg font-semibold">Overall Dataset Distribution</h3>
+          <h3 class="text-lg font-semibold">Тепловая карта</h3>
         </div>
-        <img src="{{ url_for('static', filename='dataset_dist.png') }}" alt="Dataset Distribution" class="w-1/2 mx-auto h-auto object-contain">
+        <img src="{{ url_for('static', filename='heatmap.png') }}" alt="Dataset Distribution" class="w-1/2 mx-auto h-auto object-contain">
       </div>
             <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div class="p-4">
-          <h3 class="text-lg font-semibold">Accuracy-Loss Plot</h3>
+          <h3 class="text-lg font-semibold">Матрица решений</h3>
         </div>
-        <img src="{{ url_for('static', filename='accuracy_plot.png') }}" alt="Accuracy-Loss Plot" class="w-3/4 mx-auto h-auto object-contain">
+        <img src="{{ url_for('static', filename='confusion_matrix.png') }}" alt="Accuracy-Loss Plot" class="w-3/4 mx-auto h-auto object-contain">
       </div>
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div class="p-4">
-          <h3 class="text-lg font-semibold">Training Accuracy</h3>
+          <h3 class="text-lg font-semibold">График срабатываний на тренировочных данных</h3>
         </div>
-        <img src="{{ url_for('static', filename='test_acc.png') }}" alt="Training Dataset Distribution" class="w-1/2 mx-auto h-auto object-contain">
+        <img src="{{ url_for('static', filename='train_label.png') }}" alt="Training Dataset Distribution" class="w-1/2 mx-auto h-auto object-contain">
       </div>
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div class="p-4">
-          <h3 class="text-lg font-semibold">Validation Accuracy</h3>
+          <h3 class="text-lg font-semibold">График срабатывания на тестовых данных</h3>
         </div>
-        <img src="{{ url_for('static', filename='val_acc.png') }}" alt="Validation Dataset Distribution" class="w-1/2 mx-auto h-auto object-contain">
+        <img src="{{ url_for('static', filename='test_label.png') }}" alt="Validation Dataset Distribution" class="w-1/2 mx-auto h-auto object-contain">
       </div>
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div class="p-4">
-          <h3 class="text-lg font-semibold">Classification Report</h3>
+          <h3 class="text-lg font-semibold">Точность метрики Roc-Auc на каждом из фолдов обучения</h3>
         </div>
-        <img src="{{ url_for('static', filename='report.png') }}" alt="Classification Report" class="w-1/3 mx-auto h-auto object-contain">
+        <img src="{{ url_for('static', filename='roc_folds.png') }}" alt="Classification Report" class="w-2/4 mx-auto h-auto object-contain">
       </div>
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
         <div class="p-4">
-          <h3 class="text-lg font-semibold">Confusion Matrix</h3>
+          <h3 class="text-lg font-semibold">Рейтинг важности меток при обучении</h3>
         </div>
-        <img src="{{ url_for('static', filename='matrix.png') }}" alt="Confusion Matrix" class="w-1/3 mx-auto h-auto object-contain">
+        <img src="{{ url_for('static', filename='top20features.png') }}" alt="Confusion Matrix" class="w-3/4 mx-auto h-auto object-contain">
+      </div>
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+        <div class="p-4">
+          <h3 class="text-lg font-semibold">Метрики при обучении</h3>
+        </div>
+        <img src="{{ url_for('static', filename='metrics.png') }}" alt="Confusion Matrix" class="w-3/4 mx-auto h-auto object-contain">
       </div>
     </div>
+    
+  </div>
   </div>
 </section>
       <section id="contact" class="min-h-screen py-20 px-6 bg-gray-100">

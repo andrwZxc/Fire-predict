@@ -41,17 +41,18 @@
       </div>
     </div>
   </nav>
-  <section id="prediction-section" class="relative h-screen flex items-center justify-center bg-gray-900">
+  <section id="prediction-section" class="relative pt-20 pb-20 flex items-center justify-center bg-gray-900 overflow-hidden style='max-heightf: 80vh'">
     <div class="fixed inset-0 -z-10">
       <img
-        src="https://images.unsplash.com/photo-1579165466741-7f35e4755660"
+        src="https://avatars.mds.yandex.net/get-altay/10147638/2a0000018b4c82c831b50f0ee9458e79d83f/XXL_height"
         alt="Laboratory"
         class="w-full h-full object-cover opacity-30"
       />
     </div>
 
     <!-- ФОРМА С ДАННЫМИ -->
-    <div class="relative p-10 bg-white rounded-lg shadow-lg max-w-lg w-full text-center">
+    <div class="relative p-6 bg-white rounded-lg shadow-lg max-w-xl w-full text-center">
+      <form id="sensorForm" class="w-full">
       <h2 class="text-3xl font-bold my-4">Данные с ваших датчиков</h2>
       <p class="text-gray-700 mb-6">
         В эту форму будут передаваться данные с датчиков противопожарной защиты
@@ -70,7 +71,7 @@
           </button>
       </div>
 
-        <form id="sensorForm" class="w-full">
+        <!-- <form id="sensorForm" class="w-full"> -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
 
             <div class="form-group">
@@ -355,206 +356,7 @@ async function sendDataToServer(data) {
         console.error('Ошибка отправки данных:', error);
     }
 }
-//         // функция обработки  
 
-//          // Таймер для автоматической генерации
-//         let autoUpdateInterval = null;
-//         let isAutoMode = false;
-        
-//         document.addEventListener('DOMContentLoaded', function() {
-//     // Получаем элементы интерфейса
-//     const startAutoBtn = document.getElementById('startAuto');
-//     const stopAutoBtn = document.getElementById('stopAuto');
-//     const checkNowBtn = document.getElementById('checkNow');
-//     const statusLabel = document.getElementById('status');
-//     const lastCheckLabel = document.getElementById('lastCheck');
-
-//     // Генерация начальных значений
-//     generateSensorValues();
-//     stopAutoBtn.disabled = true;
-
-//     // Обновление часов
-//     updateClock();
-//     setInterval(updateClock, 1000);
-
-//     // Назначаем обработчики событий
-//     startAutoBtn.addEventListener('click', startAutoMode);
-//     stopAutoBtn.addEventListener('click', stopAutoMode);
-//     checkNowBtn.addEventListener('click', manualCheck);
-// });
-
-        
-//         // Функция генерации случайных значений
-//         function generateSensorValues() {
-//     const sensors = [
-//         { id: 'temperature', min: -15, max: 60, step: 0.1 },
-//         { id: 'humidity', min: 10, max: 75, step: 0.1 },
-//         { id: 'tvoc', min: 0, max: 60000, step: 2 },
-//         { id: 'eco2', min: 400, max: 60000, step: 2 },
-//         { id: 'raw_h2', min: 10668, max: 13803, step: 1 },
-//         { id: 'raw_ethanol', min: 15317, max: 21410, step: 1 },
-//         { id: 'pressure', min: 930, max: 939, step: 0.01 },
-//         { id: 'PM1.0', min: 10, max: 14333, step: 10 },
-//         { id: 'PM2.0', min: 12, max: 45432, step: 10 }, // Исправлено с PM2.5 на PM2.0
-//         { id: 'NC0.5', min: 8, max: 61482, step: 10 },
-//         { id: 'NC1.0', min: 7, max: 51914, step: 10 },
-//         { id: 'NC2.5', min: 9, max: 30026, step: 10 },
-//         { id: 'CNT', min: 10, max: 24993, step: 10 }
-//     ];
-    
-//     sensors.forEach(sensor => {
-//         const input = document.getElementById(sensor.id);
-//         if (input) {
-//             // Генерация нового значения
-//             const newValue = (Math.random() * (sensor.max - sensor.min) + sensor.min).toFixed(
-//                 sensor.step.toString().includes('.') ? sensor.step.toString().split('.')[1].length : 0
-//             );
-//             input.value = newValue;
-//         }
-//     });
-    
-//     return getCurrentValues();
-// }
-        
-//         // Получение текущих значений
-//         function getCurrentValues() {
-//             return {
-//                 temperature: parseFloat(document.getElementById('temperature').value),
-//                 humidity: parseFloat(document.getElementById('humidity').value),
-//                 tvoc: parseInt(document.getElementById('tvoc').value),
-//                 eco2: parseInt(document.getElementById('eco2').value),
-//                 raw_h2: parseFloat(document.getElementById('raw_h2').value),
-//                 raw_ethanol: parseFloat(document.getElementById('raw_ethanol').value),
-//                 pressure: parseFloat(document.getElementById('pressure').value),
-//                 'PM1.0': parseFloat(document.getElementById('PM1.0').value),
-//                 'PM2.0': parseFloat(document.getElementById('PM2.0').value),
-//                 'NC0.5': parseFloat(document.getElementById('NC0.5').value),
-//                 'NC1.0': parseFloat(document.getElementById('NC1.0').value),
-//                 'NC2.5': parseFloat(document.getElementById('NC2.5').value),
-//                 'CNT': parseFloat(document.getElementById('CNT').value)
-//             };
-//         }
-        
-//         // Функция отправки данных на сервер
-//         async function sendToModel(data) {
-//             // Показываем индикатор загрузки
-//             document.getElementById('loading').classList.remove('hidden');
-//             document.getElementById('result').classList.add('hidden');
-            
-//             try {
-//                 // Отправляем данные на сервер Flask
-//                 const response = await fetch('/predict-fire', {
-//                     method: 'POST',
-//                     headers: {
-//                         'Content-Type': 'application/json',
-//                     },
-//                     body: JSON.stringify(data) // JSON здесь нужен для передачи данных между сервером и клиентом в текстовом формате
-//                 });
-                
-//                 if (!response.ok) {
-//                     throw new Error('Ошибка сервера');
-//                 }
-                
-//                 const result = await response.json();
-//                 const resultDiv = document.getElementById('result');
-                
-//                 // Отображаем результат
-//                 if (result.prediction === 1) {
-//                     resultDiv.textContent = '⚠️ ВНИМАНИЕ: Обнаружено возгорание! ⚠️';
-//                     resultDiv.className = 'mt-6 p-4 rounded-md text-center font-bold bg-red-100 text-red-800';
-//                 } else {
-//                     resultDiv.textContent = '✅ Нет признаков возгорания. Всё в норме.';
-//                     resultDiv.className = 'mt-6 p-4 rounded-md text-center font-bold bg-green-100 text-green-800';
-//                 }
-                
-//                 resultDiv.classList.remove('hidden');
-                
-//                 // Обновляем время последней проверки
-//                 lastCheckLabel.textContent = new Date().toLocaleTimeString();
-                
-//             } catch (error) {
-//                 console.error('Ошибка:', error);
-//                 const resultDiv = document.getElementById('result');
-//                 resultDiv.textContent = '❌ Ошибка при получении данных';
-//                 resultDiv.className = 'mt-6 p-4 rounded-md text-center font-bold bg-yellow-100 text-yellow-800';
-//                 resultDiv.classList.remove('hidden');
-//             } finally {
-//                 document.getElementById('loading').classList.add('hidden');
-//             }
-//         }
-        
-//         // Запуск автоматического режима
-//         function startAutoMode() {
-//             if (isAutoMode) return;
-            
-//             isAutoMode = true;
-//             document.getElementById('status').textContent = 'Авто режим (активно)';
-//             document.getElementById('startAuto').disabled = true;
-//             document.getElementById('stopAuto').disabled = false;
-            
-//             // Генерируем и отправляем данные сразу
-//             const data = generateSensorValues();
-//             sendToModel(data);
-            
-//             // Устанавливаем интервал на 1 секунду
-//             autoUpdateInterval = setInterval(() => {
-//                 const data = generateSensorValues();
-//                 sendToModel(data);
-//             }, 1000);
-//         }
-        
-//         // Остановка автоматического режима
-//         function stopAutoMode() {
-//             if (!isAutoMode) return;
-            
-//             isAutoMode = false;
-//             statusLabel.textContent = 'Не активно';
-//             startAutoBtn.disabled = false;
-//             stopAutoBtn.disabled = true;
-            
-//             clearInterval(autoUpdateInterval);
-//             autoUpdateInterval = null;
-//         }
-        
-//         // Проверка вручную
-//         function manualCheck() {
-//             const data = getCurrentValues();
-//             sendToModel(data);
-//         }
-        
-//         // Назначаем обработчики событий
-//         startAutoBtn.addEventListener('click', startAutoMode);
-//         stopAutoBtn.addEventListener('click', stopAutoMode);
-//         checkNowBtn.addEventListener('click', manualCheck);
-        
-//         // Инициализация - генерируем начальные значения
-//         document.addEventListener('DOMContentLoaded', function() {
-//     // Инициализация элементов
-//     const startAutoBtn = document.getElementById('startAuto');
-//     const stopAutoBtn = document.getElementById('stopAuto');
-//     const checkNowBtn = document.getElementById('checkNow');
-//     const statusLabel = document.getElementById('status');
-//     const lastCheckLabel = document.getElementById('lastCheck');
-
-//     // Генерация начальных значений
-//     generateSensorValues();
-//     stopAutoBtn.disabled = true;
-
-//     // Обновление часов
-//     updateClock();
-//     setInterval(updateClock, 1000);
-
-//     // Назначение обработчиков
-//     startAutoBtn.addEventListener('click', startAutoMode);
-//     stopAutoBtn.addEventListener('click', stopAutoMode);
-//     checkNowBtn.addEventListener('click', manualCheck);
-// });
-//         setTimeout(function() {
-//     generateSensorValues();
-//     stopAutoBtn.disabled = true;
-//     updateClock();
-//     setInterval(updateClock, 1000);
-// }, 100); // Небольшая задержка для полной загрузки DOM
 
   </script>
 

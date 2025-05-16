@@ -12,26 +12,18 @@ from sklearn.preprocessing import StandardScaler
 from flask import send_from_directory
 
 
-
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///room_data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 
-# # Загрузка модели
-# model_path = 'models/model.pkl'
-# if os.path.exists(model_path):
-#     with open(model_path, 'rb') as f:
-#         model = pickle.load(f)
-# else:
-#     raise FileNotFoundError(f"Model file not found at {model_path}")
 
 with open('models/model15.05.pkl', 'rb') as f:
     artifacts = pickle.load(f)
     print("Загруженные фичи: ", artifacts['features'])
     model = artifacts['model']
-    #le = artifacts['label_encoder']
     features = artifacts['features']
 db = SQLAlchemy(app)
 
@@ -39,6 +31,24 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+
+class RoomData(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    CO2_Room = db.Column(db.Float, nullable=False)
+    H2_Room = db.Column(db.Float, nullable=False)
+    PM05_Room = db.Column(db.Float, nullable=False)
+    PM100_Room = db.Column(db.Float, nullable=False)
+    PM10_Room = db.Column(db.Float, nullable=False)
+    PM25_Room = db.Column(db.Float, nullable=False)
+    PM40_Room = db.Column(db.Float, nullable=False)
+    PM_Room_Typical_Size = db.Column(db.Float, nullable=False)
+    PM_Total_Room = db.Column(db.Float, nullable=False)
+    VOC_Room_RAW = db.Column(db.Float, nullable=False)
+    Temperature_Room = db.Column(db.Float, nullable=False)
+    Humidity_Room = db.Column(db.Float, nullable=False)
+    CO_Room = db.Column(db.Float, nullable=False)
+    def __repr__(self):
+        return f'<RoomData {self.id}>'
 
 
 def preprocess_image(image):
@@ -65,13 +75,13 @@ def about():
 def signup():
     if request.method == 'POST':
         username = request.form['username']
-        password = request.form['password']  # Store password as plain text
+        password = request.form['password']  
 
         if User.query.filter_by(username=username).first():
             flash('Username already exists')
             return redirect(url_for('signup'))
 
-        new_user = User(username=username, password=password)  # No hashing here
+        new_user = User(username=username, password=password)  
         db.session.add(new_user)
         db.session.commit()
         flash('Signup successful. Please login.')
@@ -109,6 +119,7 @@ def get_csv_data():
     
 
 @app.route('/predict_fire', methods=['GET','POST'])
+
 def predict_fire():
     if request.method == 'GET':
         return render_template('prediction.html')  # если метод get то просто загружаем страницу
@@ -118,9 +129,6 @@ def predict_fire():
         # Получаем данные из запроса
         data = request.get_json() # преобразование данных из JSON в py словарь
         
-        
-
-    
         # Преобразуем в DataFrame (в том же порядке, как при обучении)
         input_data = pd.DataFrame([[
             data['CO2_Room'],
@@ -139,6 +147,24 @@ def predict_fire():
             
         ]], columns=['CO2_Room','H2_Room', 'PM05_Room' ,'PM100_Room', 'PM10_Room', 'PM25_Room' , 'PM40_Room', 'PM_Room_Typical_Size' ,'PM_Total_Room', 'VOC_Room_RAW' ,'Temperature_Room', 'Humidity_Room','CO_Room' ])
         
+        new_data = RoomData(
+            CO2_Room=data['CO2_Room'],
+            H2_Room=data['H2_Room'],
+            PM05_Room=data['PM05_Room'],
+            PM100_Room=data['PM100_Room'],
+            PM10_Room=data['PM10_Room'],
+            PM25_Room=data['PM25_Room'],
+            PM40_Room=data['PM40_Room'],
+            PM_Room_Typical_Size=data['PM_Room_Typical_Size'],
+            PM_Total_Room=data['PM_Total_Room'],
+            VOC_Room_RAW=data['VOC_Room_RAW'],
+            Temperature_Room=data['Temperature_Room'],
+            Humidity_Room=data['Humidity_Room'],
+            CO_Room=data['CO_Room']
+        )
+        db.session.add(new_data)
+        db.session.commit()
+
         print("Данные для предсказания: ", input_data)
     
         #input_data['Sensor_ID'] = le.transform(input_data['Sensor_ID']) # перекодируем метки
@@ -162,25 +188,7 @@ def predict_fire():
         print("Ошибка: ", str(e))
         return jsonify({'error': str(e), 'status':'error'})
     
-    # features = np.array(data['features']).reshape(1, -1)
-        
-    #     # Препроцессинг
-    #     scaled_features = scaler.transform(features)
-        
-    #     # Предсказание
-    #     prediction = model.predict(scaled_features)
-        
-    #     # Постобработка (если нужно декодировать метки)
-    #     result = {
-    #         'fire_probability': float(prediction[0][0]),
-    #         'fire_class': int(prediction[0][0] > 0.5)
-    #     }
-        
-    #     return jsonify(result)
-    
-    # except Exception as e:
-    #     return jsonify({'error': str(e)}), 400
-
+   
 
 if __name__ == '__main__':
     with app.app_context():
